@@ -1,0 +1,3 @@
+const verbalTokenAddress = "0xbe9a1bD1FA89EbdE4A2381EFd708717c6e011a7C"
+const podcastAddress = "0x3e8FF7427Ea64D38B4885864847FbBbb2408c48A"
+const sessionAddress = "0xc853255C2cD41aF8CAcF5e79480950f250FCeb94"

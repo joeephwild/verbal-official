@@ -215,7 +215,7 @@ const Profile = () => {
                 </View>
               )}
 
-              {isSwitched === "overview" && <Overview />}
+              {isSwitched === "overview" && <Overview isNotProfile={false} />}
             </View>
 
             <Portal>

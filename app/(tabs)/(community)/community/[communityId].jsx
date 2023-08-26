@@ -94,7 +94,7 @@ const CommunityDetail = () => {
       const user = auth.currentUser;
       const docRef = await addDoc(collection(db, "post"), {
         community_id: communityId,
-        content: content,
+        contents: content,
         img_url: image,
         video_url: "",
         image: user.photoURL,

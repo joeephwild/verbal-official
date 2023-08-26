@@ -90,20 +90,27 @@ const Ai = () => {
       <View style={{ flex: 1 }}>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
-          keyboardVerticalOffset={100}
+          keyboardVerticalOffset={180}
           behavior={"padding"}
+
         >
-          <FlatList
-            data={chatHistory}
-            renderItem={({ item }) => <MessageBox  aiLoading={aiLoading} {...item} />}
-            keyExtractor={(_, index) => index.toString()}
-            contentContainerStyle={{
-              paddingHorizontal: 10,
-              gap: 24,
-              paddingBottom: 180,
-            }}
-            automaticallyAdjustKeyboardInsets
-          />
+          {!chatHistory && chatHistory <= 0 ? (
+            <NoChatView />
+          ) : (
+            <FlatList
+              data={chatHistory}
+              renderItem={({ item }) => (
+                <MessageBox aiLoading={aiLoading} {...item} />
+              )}
+              keyExtractor={(_, index) => index.toString()}
+              contentContainerStyle={{
+                paddingHorizontal: 10,
+                gap: 24,
+                paddingBottom: 180,
+              }}
+              // automaticallyAdjustKeyboardInsets
+            />
+          )}
 
           <InputBox
             text={text}

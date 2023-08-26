@@ -5,6 +5,7 @@ import {
   Modal,
   StyleSheet,
   BackHandler,
+  Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
@@ -21,6 +22,7 @@ import * as LocalAuthentication from "expo-local-authentication";
 import { useWalletConnectModal } from "@walletconnect/modal-react-native";
 import { Provider, useAuth } from "../context/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
+import SeedPhraseModal from "./SeedPhraseModal";
 
 const Post = () => {
   const [seedPhrase, setSeedPhrase] = useState([]);
@@ -81,6 +83,20 @@ const Post = () => {
               )}
             </Pressable>
           </View>
+          <Pressable
+            style={{
+              width: wp(86),
+            }}
+            className="border-[#ccca] flex-row border-2 w-full mt-5 py-[16px] rounded-[8px] items-center justify-between px-4 "
+          >
+            <Text className="text-[16px] font-[SpaceMono] text-[#fff]  font-bold leading-normal">
+              Switch Network
+            </Text>
+            <Image
+              source={require("../assets/images/eth.png")}
+              className="w-6 h-8"
+            />
+          </Pressable>
         </View>
         <Pressable
           style={{
@@ -106,33 +122,11 @@ const Post = () => {
         </Pressable>
       </View>
       {/* Seed Phrase Modal */}
-      <Modal
-        visible={isAuthenticated}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={closeModal} // This allows the user to close the modal by pressing the back button
-      >
-        <View style={styles.modalContainer}>
-          {/* Blur Background */}
-          <View style={styles.blurBackground}>
-            {/* Your modal content */}
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Seed Phrase</Text>
-              <View style={styles.seedPhraseContainer}>
-                {seedPhrase.map((item, index) => (
-                  <Text key={index} style={styles.seedPhraseItem}>
-                    {item}
-                  </Text>
-                ))}
-              </View>
-              {/* Close button */}
-              <Pressable onPress={closeModal} style={styles.closeButton}>
-                <Text style={styles.closeButtonText}>Close</Text>
-              </Pressable>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <SeedPhraseModal
+        closeModal={closeModal}
+        isAuthenticated={isAuthenticated}
+        seedPhrase={seedPhrase}
+      />
     </View>
   );
 };

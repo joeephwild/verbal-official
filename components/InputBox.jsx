@@ -24,7 +24,7 @@ const InputBox = ({ index, text, setText, setAiLoading }) => {
     try {
       if (text.trim() === "") return;
       const user = auth.currentUser;
-
+      setText("");
       // Add the new message to the Firestore collection
       const docRef = await addDoc(collection(db, "chatrooms"), {
         role: "user",
@@ -32,7 +32,7 @@ const InputBox = ({ index, text, setText, setAiLoading }) => {
         userId: user.uid,
         created_at: serverTimestamp(), // Use serverTimestamp() to set the timestamp
       });
-      setText("");
+
       setAiLoading(true);
 
       const response = await mindDbQueryCall(

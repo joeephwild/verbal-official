@@ -37,7 +37,7 @@
       ],
       "package": "com.verbaldapp.verbal",
       "versionCode": 1,
-      "minSdkVersion": 23
+      "minSdkVersion": 24
     },
     "web": {
       "bundler": "metro",

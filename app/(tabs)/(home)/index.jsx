@@ -2,7 +2,6 @@ import {
   View,
   Text,
   Image,
-  ImageBackground,
   TextInput,
   TouchableNativeFeedback,
   ActivityIndicator,
@@ -15,12 +14,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/solid";
 import { Community, MyLessons, Speakers } from "../../../components";
 import { Link, router } from "expo-router";
-import { useEnsName, useEnsAvatar } from "wagmi";
-import { useAuth } from "../../../context/auth";
-import { useAccount } from "../../../context/account";
+import { useEnsName } from "wagmi";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import { getAccount } from "@rly-network/mobile-sdk";
+// import { RegistrationWidget } from "ens-widgets";
 
 const Home = () => {
   const [wallet, setWallet] = useState("");
@@ -29,8 +27,11 @@ const Home = () => {
   const [profile, setProfile] = useState();
 
   useEffect(() => {
-    const user = auth.currentUser;
-    setProfile(user);
+    const fetchuser = () => {
+      const user = auth.currentUser;
+      setProfile(user);
+    };
+    fetchuser();
     const fetchCommunity = async () => {
       const address = await getAccount();
 
@@ -77,7 +78,7 @@ const Home = () => {
                   <Image
                     source={{
                       uri: "https://images.pexels.com/photos/17729737/pexels-photo-17729737/free-photo-of-isabela-salvador.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-                    }} // Provide a placeholder image path
+                    }}
                     className="w-[50px] bg-gray-500/75 h-[50px] rounded-full"
                   />
                 )}
@@ -92,7 +93,7 @@ const Home = () => {
                   Hi
                   <Text className="text-[#000]">
                     {" "}
-                    {name ? name : profile ? profile.displayName : ""}
+                    {name ? name : profile ? profile.displayName : "Your Name"}
                   </Text>
                 </Text>
                 <Text className="text-[#fff]">
@@ -102,11 +103,11 @@ const Home = () => {
               </View>
             </View>
 
-            <Link href="/(auth)/CreateAccount" asChild>
+            <View className="flex-row items-center space-x-6">
               <TouchableNativeFeedback className="items-center">
-                <BellIcon size={25} color="#fff" />
+                <BellIcon size={25} color="#000" />
               </TouchableNativeFeedback>
-            </Link>
+            </View>
           </View>
           <View className="bg-[#fff] w-[338px] h-[48px] rounded-[5px] border border-[#706C6C] flex-row px-[20px] items-center mx-[28px] justify-center ">
             <MagnifyingGlassIcon size={15} color="#000" />

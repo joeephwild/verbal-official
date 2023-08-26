@@ -103,6 +103,12 @@ function RootLayoutNav() {
                   presentation: "modal",
                 }}
               />
+              <Stack.Screen
+                name="mintProfile"
+                options={{
+                  presentation: "modal",
+                }}
+              />
             </Stack>
           </WagmiConfig>
         </Provider>

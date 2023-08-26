@@ -54,7 +54,7 @@ function useProtectedRoute(session) {
 }
 
 export function Provider(props) {
-  const [session, setSession] = React.useState(null);
+  const [session, setSession] = React.useState("");
   const [id, setId] = useState("");
   const [community, setCommunity] = React.useState([]);
   const [loading, setLoading] = useState(true);
