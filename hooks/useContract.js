@@ -4,7 +4,7 @@ import EnsRegsitar from "../constants/EnsRegsitar.json";
 import { Alert } from "react-native";
 import * as Crypto from "expo-crypto";
 
-export const durationToRegister = 31556952; // 1 year
+// export const durationToRegister = 31556952; // 1 year
 export const resolver = "0xd7a4F6473f32aC2Af804B3686AE8F1932bC35750";
 export const ABI = [
   "function rentPrice(string memory name, uint duration) view public returns(uint)",
@@ -16,11 +16,6 @@ export const ABI = [
 ];
 
 export const connectWithContract = async (contractAddress, contractAbi) => {
-  // const wallet = await getWallet();
-  // console.log("wallet", wallet);
-  // // const provider = ethers.providers.JsonRpcProvider(rpcUrl);
-  // const contract = new ethers.Contract(contractAddress, contractAbi, wallet);
-  // return contract;
   const mnemonic = await getAccountPhrase();
   const privateKey =
     ethers.Wallet.fromMnemonic(mnemonic)._signingKey().privateKey;
@@ -35,7 +30,7 @@ export const connectWithContract = async (contractAddress, contractAbi) => {
   return myContract;
 };
 
-export const register = async (name, owner) => {
+export const register = async (name, owner, durationToRegister) => {
   try {
     const contract = await connectWithContract(
       "0x283Af0B28c62C092C9727F1Ee09c02CA627EB7F5",
