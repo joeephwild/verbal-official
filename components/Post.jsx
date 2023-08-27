@@ -12,6 +12,7 @@ import {
   getAccountPhrase,
   RlyMumbaiNetwork,
   getAccount,
+  permanentlyDeleteAccount,
 } from "@rly-network/mobile-sdk";
 import {
   widthPercentageToDP as wp,
@@ -20,8 +21,7 @@ import {
 import { EyeIcon, EyeSlashIcon } from "react-native-heroicons/outline";
 import * as LocalAuthentication from "expo-local-authentication";
 import { useWalletConnectModal } from "@walletconnect/modal-react-native";
-import { Provider, useAuth } from "../context/auth";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuth } from "../context/auth";
 import SeedPhraseModal from "./SeedPhraseModal";
 
 const Post = () => {
@@ -118,6 +118,17 @@ const Post = () => {
         >
           <Text className="text-[16px] text-red-700  font-bold leading-normal">
             Delete Account
+          </Text>
+        </Pressable>
+        <Pressable
+          style={{
+            width: wp(86),
+          }}
+          onPress={() => permanentlyDeleteAccount()}
+          className="border-[#ccca] border-2 w-full mt-5 py-[16px] rounded-[8px] items-center justify-center"
+        >
+          <Text className="text-[16px] text-red-700  font-bold leading-normal">
+            Delete Wallet
           </Text>
         </Pressable>
       </View>

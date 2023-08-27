@@ -1,27 +1,49 @@
-import { View, Text, Pressable, TextInput, Alert } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  TextInput,
+  Alert,
+  Modal,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
-import { Link, router } from "expo-router";
 import { ChevronLeftIcon } from "react-native-heroicons/solid";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { getAccount } from "@rly-network/mobile-sdk";
-import { register } from "../hooks/useContract";
+import { connectWithContract } from "../hooks/useContract";
+import { ethers } from "ethers";
 // import { ethers } from "ethers";
 // import { getWallet } from "@rly-network/mobile-sdk";
 // import EnsRegsitar from "../constants/EnsRegsitar.json";
-// import * as Crypto from "expo-crypto";
+import * as Crypto from "expo-crypto";
 
 const mintProfile = () => {
   const [name, setName] = useState("");
+  const [duration, setDuration] = useState("");
   const [account, setAccount] = useState("");
-  // const { register } = useContract();
+  const [isLoading, setIsLoading] = useState(false); // Step 2
+  const [statusMessage, setStatusMessage] = useState("Waiting for Ens mint......"); // Step 2
+  const [modalVisible, setModalVisible] = useState(false); // Step 3
 
-  // const handleRegister = async () => {
-  //   await register(name, account);
-  //   Alert.alert("Done succesfully");
-  // };
+  const resolver = "0xd7a4F6473f32aC2Af804B3686AE8F1932bC35750";
+  const ABI = [
+    "function rentPrice(string memory name, uint duration) view public returns(uint)",
+    "function available(string memory name) public view returns(bool)",
+    "function makeCommitmentWithConfig(string memory name, address owner, bytes32 secret, address resolver, address addr) pure public returns(bytes32)",
+    "function commit(bytes32 commitment) public",
+    "function registerWithConfig(string memory name, address owner, uint duration, bytes32 secret, address resolver, address addr) public payable",
+    "function minCommitmentAge() public view returns(uint)",
+  ];
+  const durationToRegister = 31556952;
+
+  function yearsToSeconds(years) {
+    const secondsInAYear = 31556952; // Number of seconds in a year
+    return years * secondsInAYear;
+  }
 
   useEffect(() => {
     const getWallet = async () => {
@@ -31,69 +53,111 @@ const mintProfile = () => {
     getWallet();
   });
 
-  // const register = async (name, owner) => {
-  //   const contract = connectWithContract(
-  //     resolver,
-  //     ABI
-  //   );
-  //   const isNameAvailable = await contract.available(name);
-  //   if (!isNameAvailable) {
-  //     return Alert.alert(`${name}.eth is not available`);
-  //   }
+  function truncateText(text, maxLength) {
+    if (text.length <= maxLength) {
+      return text;
+    } else {
+      // Truncate the text and add "..." to indicate truncation
+      return text.substring(0, maxLength - 3) + "...";
+    }
+  }
 
-  //   //generate a random secret
-  //   const secret = "0x" + Crypto.getRandomBytes(32).toString("hex");
-  //   console.log(`your secret is: ${secret}`);
+  const register = async (name, owner) => {
+    try {
+      setIsLoading(true); // Start loading
+      setModalVisible(true);
+      const contract = await connectWithContract(
+        "0x283Af0B28c62C092C9727F1Ee09c02CA627EB7F5",
+        ABI
+      );
+      const isNameAvailable = await contract?.available(name);
+      if (!isNameAvailable) {
+        return Alert.alert(`${name}.eth is not available`);
+      }
 
-  //   //make a commitment
-  //   const commitment = await contract.makeCommitmentWithConfig(
-  //     name,
-  //     owner,
-  //     secret,
-  //     resolver,
-  //     owner
-  //   );
-  //   const commit = await contract.commit(commitment);
-  //   console.log(
-  //     `Commitment pending: https://goerli.etherscan.io/tx/${commit.hash}`
-  //   );
-  //   await commit.wait();
+      const randomBytes = Crypto.getRandomBytes(32);
+      const secretHex =
+        "0x" +
+        randomBytes.reduce(
+          (acc, byte) => acc + byte.toString(16).padStart(2, "0"),
+          ""
+        );
+      console.log(`your secret is: ${secretHex}`);
 
-  //   //wait for commitment to be confirmed
-  //   const minCommmitmentAge = Number(await contract.minCommitmentAge());
-  //   console.log(
-  //     `Commitment successful, waiting ${minCommmitmentAge} seconds....`
-  //   );
+      // Make a commitment
+      const commitment = await contract?.makeCommitmentWithConfig(
+        name,
+        owner,
+        randomBytes,
+        resolver,
+        owner
+      );
+      const commit = await contract?.commit(commitment);
+      setStatusMessage(
+        `Commitment pending: https://goerli.etherscan.io/tx/${commit.hash}`
+      );
+      console.log(
+        `Commitment pending: https://goerli.etherscan.io/tx/${commit.hash}`
+      );
+      await commit.wait();
 
-  //   //Get the price per name
+      // Wait for commitment to be confirmed
+      const minCommitmentAge = Number(await contract?.minCommitmentAge());
+      setStatusMessage(
+        `Commitment successful, waiting ${minCommitmentAge} seconds....`
+      );
+      console.log(
+        `Commitment successful, waiting ${minCommitmentAge} seconds....`
+      );
 
-  //   const priceWei = Number(await contract.rentPrice(name, durationToRegister));
+      // Get the price per name
 
-  //   const priceInEth = priceWei / Number(ethers.constants.WeiPerEther);
+      const priceWei = Number(
+        await contract?.rentPrice(name, durationToRegister)
+      );
 
-  //   //Register a name
-  //   const register = await contract.registerWithConfig(
-  //     name,
-  //     owner,
-  //     durationToRegister,
-  //     secret,
-  //     resolver,
-  //     owner,
-  //     {
-  //       value: priceWei,
-  //     }
-  //   );
-  //   console.log(
-  //     `submitting transaction - https://goerli.etherscan.io/tx/${register.hash}`
-  //   );
-  //   await register.wait();
-  //   console.log(`
-  //   ${name}.eth registered succesfully for ${priceInEth.toFixed(
-  //     4
-  //   )} Eth (not including gas)`);
-  //   // const wallet = await getWallet()
-  //   // console.log("wallet", wallet);
-  // };
+      const priceInEth = priceWei / Number(ethers.constants.WeiPerEther);
+
+      // Define the gas limit (you can adjust this value as needed)
+      const gasLimit = 500000; // Example gas limit value
+
+      // Register a name with a specified gas limit
+      const register = await contract?.registerWithConfig(
+        name,
+        owner,
+        durationToRegister,
+        randomBytes,
+        resolver,
+        owner,
+        {
+          value: priceWei,
+          gasLimit: gasLimit, // Set the gas limit here
+        }
+      );
+      setStatusMessage(
+        `submitting transaction - https://goerli.etherscan.io/tx/${register.hash}`
+      );
+      console.log(
+        `submitting transaction - https://goerli.etherscan.io/tx/${register.hash}`
+      );
+      await register.wait();
+      setStatusMessage(
+        `${name}.eth registered successfully for ${priceInEth.toFixed(
+          4
+        )} Eth (not including gas)`
+      );
+      console.log(`
+        ${name}.eth registered successfully for ${priceInEth.toFixed(
+        4
+      )} Eth (not including gas)`);
+    } catch (error) {
+      setStatusMessage(error.message);
+      console.log(error.message);
+    } finally {
+      setIsLoading(false); // Stop loading, whether success or failure
+      setModalVisible(true); // Show modal
+    }
+  };
   return (
     <View style={{ flex: 1 }}>
       <View className="mx-[24px] pt-[26px]">
@@ -131,7 +195,10 @@ const mintProfile = () => {
               Duration
             </Text>
             <TextInput
+              value={duration}
+              onChangeText={(text) => setDuration(text)}
               placeholderTextColor="#fff"
+              placeholder="Enter a duration E.G 1, 2"
               className="w-full border h-[56px] placeholder:text-[#ccccccaa] px-[24px] py-[16px] items-center justify-center rounded-[8px]  border-[#aaa]"
             />
           </View>
@@ -140,7 +207,9 @@ const mintProfile = () => {
           style={{
             width: wp(90),
           }}
-          onPress={() => register(name, account)}
+          onPress={() => {
+            register(name, account);
+          }}
           className="bg-[#F70] mt-[90px] mb-[24px] w-full py-[16px] rounded-[8px] items-center justify-center"
         >
           <Text className="text-[16px] text-white  font-bold leading-normal">
@@ -148,6 +217,56 @@ const mintProfile = () => {
           </Text>
         </Pressable>
       </View>
+      {/* Loading Modal */}
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          }}
+        >
+          <View
+            style={{
+              width: wp(80),
+              backgroundColor: "#fff",
+              padding: 20,
+              borderRadius: 8,
+              alignItems: "center",
+            }}
+          >
+            <>
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>Status</Text>
+              <Text
+                style={{ marginVertical: 10 }}
+                className="truncate text-red-600"
+              >
+                {truncateText(statusMessage, 150)}
+              </Text>
+              <Pressable
+                onPress={() => setModalVisible(!modalVisible)}
+                style={{
+                  marginTop: 10,
+                  backgroundColor: "#F70",
+                  paddingVertical: 10,
+                  paddingHorizontal: 20,
+                  borderRadius: 8,
+                }}
+              >
+                <Text style={{ color: "white" }}>Close</Text>
+              </Pressable>
+            </>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
