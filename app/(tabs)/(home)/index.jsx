@@ -18,24 +18,43 @@ import { useEnsName } from "wagmi";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import { getAccount } from "@rly-network/mobile-sdk";
+import { providers } from "ethers";
 // import { RegistrationWidget } from "ens-widgets";
 
 const Home = () => {
   const [wallet, setWallet] = useState("");
   const [allCommunities, setAllCommunity] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [profile, setProfile] = useState();
+  const [accountDetails, setAccountDetails] = useState([]);
 
   useEffect(() => {
-    const fetchuser = () => {
-      const user = auth.currentUser;
-      setProfile(user);
+    const filterForTutor = async () => {
+      try {
+        const address = await getAccount();
+        setWallet(address);
+        const q = query(collection(db, "users"));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          let profiles = [];
+          querySnapshot.forEach((doc) => {
+            profiles.push({ ...doc.data(), id: doc.id });
+          });
+          const tutorAccount = profiles?.filter(
+            (item) => item.address === address
+          );
+          setAccountDetails(tutorAccount);
+          console.log("tutor", tutorAccount);
+        });
+        return () => unsubscribe();
+      } catch (error) {
+        console.log(error);
+      }
     };
-    fetchuser();
-    const fetchCommunity = async () => {
-      const address = await getAccount();
 
-      setWallet(address);
+    filterForTutor();
+  }, [wallet]);
+
+  useEffect(() => {
+    const fetchCommunity = async () => {
       setIsLoading(true);
       const q = query(collection(db, "community"));
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -51,10 +70,13 @@ const Home = () => {
     };
     fetchCommunity();
   }, []);
-
+  
   const { data: name } = useEnsName({
     address: wallet,
+    chainId: 5,
+    staleTime: 0,
   });
+  console.log(wallet, name);
   return (
     <ScrollView
       centerContent={true}
@@ -65,42 +87,37 @@ const Home = () => {
       <SafeAreaView className="bg-[#F70] w-full h-[311px] rounded-b-[50px]">
         <View contentContainerStyle={{ flex: 1 }}>
           <View className="flex-row items-center py-[20px] justify-between px-[24px] w-full">
-            <View className="flex-row space-x-4 items-center">
-              <Pressable onPress={() => router.push("/Profile")}>
-                {profile && profile.photoURL ? (
-                  <Image
-                    source={{
-                      uri: profile.photoURL,
-                    }}
-                    className="w-[50px] bg-gray-500/75 h-[50px] rounded-full"
-                  />
-                ) : (
-                  <Image
-                    source={{
-                      uri: "https://images.pexels.com/photos/17729737/pexels-photo-17729737/free-photo-of-isabela-salvador.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-                    }}
-                    className="w-[50px] bg-gray-500/75 h-[50px] rounded-full"
-                  />
-                )}
-              </Pressable>
-              <View>
-                <Text
-                  style={{
-                    fontFamily: "SpaceMono",
-                  }}
-                  className="text-[24px] font-bold leading-normal text-[#fff]"
-                >
-                  Hi
-                  <Text className="text-[#000]">
-                    {" "}
-                    {name ? name : profile ? profile.displayName : "Your Name"}
-                  </Text>
-                </Text>
-                <Text className="text-[#fff]">
-                  {" "}
-                  {wallet.slice(0, 8)}... {wallet.slice(30, 48)}
-                </Text>
-              </View>
+            <View>
+              {accountDetails?.map((item) => (
+                <View className="flex-row space-x-4 items-center">
+                  <Pressable onPress={() => router.push("/Profile")}>
+                    <Image
+                      source={{
+                        uri: item.profile_img,
+                      }}
+                      className="w-[50px] bg-gray-500/75 h-[50px] rounded-full"
+                    />
+                  </Pressable>
+                  <View>
+                    <Text
+                      style={{
+                        fontFamily: "SpaceMono",
+                      }}
+                      className="text-[24px] font-bold leading-normal text-[#fff]"
+                    >
+                      Hi
+                      <Text className="text-[#000]">
+                        {" "}
+                        {name ? name : item.userName}
+                      </Text>
+                    </Text>
+                    <Text className="text-[#fff]">
+                      {" "}
+                      {wallet.slice(0, 8)}... {wallet.slice(30, 48)}
+                    </Text>
+                  </View>
+                </View>
+              ))}
             </View>
 
             <View className="flex-row items-center space-x-6">

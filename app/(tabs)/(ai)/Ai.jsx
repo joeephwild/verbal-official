@@ -32,6 +32,7 @@ const Ai = () => {
   const [user, setUser] = React.useState("");
   const [chatHistory, setChatHistory] = useState([]);
   const [aiLoading, setAiLoading] = useState(false);
+  const [isCurrentMessage, setIscurrentMessages] = useState(false);
 
   const speakResponse = (response) => {
     let options = {};
@@ -92,15 +93,14 @@ const Ai = () => {
           style={{ flex: 1 }}
           keyboardVerticalOffset={180}
           behavior={"padding"}
-
         >
-          {!chatHistory && chatHistory <= 0 ? (
+          {!chatHistory && chatHistory.length <= 0 ? (
             <NoChatView />
           ) : (
             <FlatList
               data={chatHistory}
               renderItem={({ item }) => (
-                <MessageBox aiLoading={aiLoading} {...item} />
+                <MessageBox aiLoading={aiLoading} isCurrentMessage={isCurrentMessage} {...item} />
               )}
               keyExtractor={(_, index) => index.toString()}
               contentContainerStyle={{
@@ -117,6 +117,7 @@ const Ai = () => {
             setText={setText}
             index={id}
             setAiLoading={setAiLoading}
+            setIscurrentMessages={setIscurrentMessages}
           />
         </KeyboardAvoidingView>
       </View>

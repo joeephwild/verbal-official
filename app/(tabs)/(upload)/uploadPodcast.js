@@ -1,8 +1,8 @@
-import { View, Text, Pressable, ScrollView } from "react-native";
+import { View, Text, Pressable, ScrollView, TextInput } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ChevronLeftIcon, PhotoIcon } from "react-native-heroicons/solid";
-import { Input, CheckBox } from "react-native-elements";
+import { CheckBox } from "react-native-elements";
 import { router } from "expo-router";
 import { pickImage } from "../../../lib/services/userService";
 
@@ -28,7 +28,7 @@ const uploadPodcast = () => {
         <View className="space-y-[6px] mt-[28px]">
           <Pressable
             onPress={handleImageUpload}
-            className="border border-[#F70] w-full h-[20%] py-[16px] rounded-[8px] items-center justify-center"
+            className="border border-[#ccca] w-full h-[20%] py-[16px] rounded-[8px] items-center justify-center"
           >
             <PhotoIcon size={25} color="#fff" />
             <Text className="text-[16px] text-start font-semibold text-[#fff]">
@@ -39,46 +39,46 @@ const uploadPodcast = () => {
             <Text className="text-[16px] text-start font-semibold text-[#fff]">
               Podcast Title
             </Text>
-            <Input
+            <TextInput
               placeholder=""
-              className="bg-[#fff] w-[338px] h-[48px] rounded-[5px]"
+              className="bg-[#000] border-2 border-[#ccca] w-[358px] h-[48px] rounded-[5px]"
             />
           </View>
-          {/* <View className="space-y-[8px] items-start">
+          <View className="space-y-[8px] items-start">
             <Text className="text-[16px] text-start font-semibold text-[#fff]">
-              Description
+              Podcast Url
             </Text>
-            <Input
+            <TextInput
               placeholder=""
-              className="bg-[#fff] w-[338px] h-[48px] rounded-[5px]"
+              className="bg-[#000] border-2 border-[#ccca] w-[358px] h-[48px] rounded-[5px]"
             />
-          </View> */}
+          </View>
           <View className="space-y-[8px] items-start">
             <Text className="text-[16px] text-start font-semibold text-[#fff]">
               Add Thumbnail
             </Text>
-            <Input
+            <TextInput
               placeholder=""
               errorMessage=""
-              className="bg-[#fff] w-[338px] h-[48px] rounded-[5px]"
+              className="bg-[#000] border-2 border-[#ccca] w-[358px] h-[48px] rounded-[5px]"
             />
           </View>
           <View className="space-y-[8px] items-start">
             <Text className="text-[16px] text-start font-semibold text-[#fff]">
               Add Podcast
             </Text>
-            <Input
+            <TextInput
               placeholder=""
-              className="bg-[#fff] w-[338px] h-[48px] rounded-[5px]"
+              className="bg-[#000] border-2 border-[#ccca] w-[358px] h-[48px] rounded-[5px]"
             />
           </View>
           <View className="space-y-[8px] items-start">
             <Text className="text-[16px] text-start font-semibold text-[#fff]">
               Category
             </Text>
-            <Input
+            <TextInput
               placeholder=""
-              className="bg-[#fff] w-[338px] h-[48px] rounded-[5px]"
+              className="bg-[#000] border-2 border-[#ccca] w-[358px] h-[48px] rounded-[5px]"
             />
           </View>
         </View>

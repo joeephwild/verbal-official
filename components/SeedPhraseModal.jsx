@@ -3,6 +3,7 @@ import React from "react";
 import { Modal } from "react-native";
 
 const SeedPhraseModal = ({ closeModal, isAuthenticated, seedPhrase }) => {
+  console.log(seedPhrase)
   return (
     <Modal
       visible={isAuthenticated}

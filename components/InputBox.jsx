@@ -6,9 +6,16 @@ import { getDatabase, ref, set } from "firebase/database";
 import { auth, database, db } from "../firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
-const InputBox = ({ index, text, setText, setAiLoading }) => {
+const InputBox = ({
+  index,
+  text,
+  setText,
+  setAiLoading,
+  setIscurrentMessages,
+}) => {
   const [isFetching, setIsFetching] = React.useState(false);
   const [userUid, setUserUid] = useState("");
+
   const handleSend = async () => {
     await mindDbQueryCall(index, text);
   };
@@ -34,12 +41,13 @@ const InputBox = ({ index, text, setText, setAiLoading }) => {
       });
 
       setAiLoading(true);
-
+      setIscurrentMessages(true);
       const response = await mindDbQueryCall(
         auth.currentUser.displayName,
         text
       );
       setAiLoading(false);
+      setIscurrentMessages(false);
       await addDoc(collection(db, "chatrooms"), {
         role: "ai",
         message: response,

@@ -7,6 +7,7 @@ import {
   Modal,
   ActivityIndicator,
 } from "react-native";
+import { ens_normalize } from "@adraffy/ens-normalize";
 import React, { useEffect, useState } from "react";
 import { ChevronLeftIcon } from "react-native-heroicons/solid";
 import {
@@ -26,7 +27,9 @@ const mintProfile = () => {
   const [duration, setDuration] = useState("");
   const [account, setAccount] = useState("");
   const [isLoading, setIsLoading] = useState(false); // Step 2
-  const [statusMessage, setStatusMessage] = useState("Waiting for Ens mint......"); // Step 2
+  const [statusMessage, setStatusMessage] = useState(
+    "Waiting for Ens mint......"
+  ); // Step 2
   const [modalVisible, setModalVisible] = useState(false); // Step 3
 
   const resolver = "0xd7a4F6473f32aC2Af804B3686AE8F1932bC35750";
@@ -38,7 +41,7 @@ const mintProfile = () => {
     "function registerWithConfig(string memory name, address owner, uint duration, bytes32 secret, address resolver, address addr) public payable",
     "function minCommitmentAge() public view returns(uint)",
   ];
-  const durationToRegister = 31556952;
+  // const durationToRegister = 31556952;
 
   function yearsToSeconds(years) {
     const secondsInAYear = 31556952; // Number of seconds in a year
@@ -62,7 +65,7 @@ const mintProfile = () => {
     }
   }
 
-  const register = async (name, owner) => {
+  const register = async (name, owner, durationToRegister) => {
     try {
       setIsLoading(true); // Start loading
       setModalVisible(true);
@@ -70,7 +73,7 @@ const mintProfile = () => {
         "0x283Af0B28c62C092C9727F1Ee09c02CA627EB7F5",
         ABI
       );
-      const isNameAvailable = await contract?.available(name);
+      const isNameAvailable = await contract?.available(ens_normalize(name));
       if (!isNameAvailable) {
         return Alert.alert(`${name}.eth is not available`);
       }
@@ -116,10 +119,14 @@ const mintProfile = () => {
         await contract?.rentPrice(name, durationToRegister)
       );
 
-      const priceInEth = priceWei / Number(ethers.constants.WeiPerEther);
+      // Add 10% to the priceWei
+      const priceWeiWithBuffer = Math.ceil(priceWei * 1.1);
 
-      // Define the gas limit (you can adjust this value as needed)
-      const gasLimit = 500000; // Example gas limit value
+      const priceInEth =
+        priceWeiWithBuffer / Number(ethers.constants.WeiPerEther);
+
+      // ...
+      const gasLimit = 1000000;
 
       // Register a name with a specified gas limit
       const register = await contract?.registerWithConfig(
@@ -130,7 +137,7 @@ const mintProfile = () => {
         resolver,
         owner,
         {
-          value: priceWei,
+          value: priceWeiWithBuffer, // Use the adjusted priceWei
           gasLimit: gasLimit, // Set the gas limit here
         }
       );
@@ -208,7 +215,7 @@ const mintProfile = () => {
             width: wp(90),
           }}
           onPress={() => {
-            register(name, account);
+            register(name, account, yearsToSeconds(duration));
           }}
           className="bg-[#F70] mt-[90px] mb-[24px] w-full py-[16px] rounded-[8px] items-center justify-center"
         >

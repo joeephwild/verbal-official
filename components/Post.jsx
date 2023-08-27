@@ -36,6 +36,7 @@ const Post = () => {
   useEffect(() => {
     const getRallyDetails = async () => {
       const mnemonic = await getAccountPhrase();
+      console.log(mnemonic)
       const wordArray = mnemonic.split(" "); // Provide a space as the delimiter
       setSeedPhrase(wordArray);
       const compatible = await LocalAuthentication.hasHardwareAsync();
