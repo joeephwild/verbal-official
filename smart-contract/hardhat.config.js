@@ -7,6 +7,7 @@ const {
   API_URL_MUMBAI,
   API_URL_AVALANCHE_CCHAAIN,
   API_URL_AURORA,
+  API_URL_OPBNB,
   PRIVATE_KEY,
 } = process.env;
 
@@ -20,14 +21,22 @@ task(
     const web3Mumbai = createAlchemyWeb3(API_URL_MUMBAI);
     const web3Ava = createAlchemyWeb3(API_URL_AVALANCHE_CCHAAIN);
     const web3Aur = createAlchemyWeb3(API_URL_AURORA);
+    const web3OPBNB = createAlchemyWeb3(API_URL_OPBNB);
 
     const networkIDArr = [
       "Arbitrum Goerli:",
       "Polygon Mumbai:",
       "Avalanche Fuji:",
       "Aurora:",
+      "OP BNB :",
     ];
-    const providerArr = [web3ArbGoerli, web3Mumbai, web3Ava, web3Aur];
+    const providerArr = [
+      web3ArbGoerli,
+      web3Mumbai,
+      web3Ava,
+      web3Aur,
+      web3OPBNB,
+    ];
     const resultArr = [];
 
     for (let i = 0; i < providerArr.length; i++) {
@@ -65,6 +74,10 @@ module.exports = {
     },
     aurora: {
       url: API_URL_AURORA,
+      accounts: [`0x${PRIVATE_KEY}`],
+    },
+    opbnb: {
+      url: API_URL_OPBNB,
       accounts: [`0x${PRIVATE_KEY}`],
     },
   },
