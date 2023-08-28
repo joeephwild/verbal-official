@@ -7,6 +7,8 @@ import {
 import { RlyMumbaiNetwork, getAccount } from "@rly-network/mobile-sdk";
 import { DocumentDuplicateIcon } from "react-native-heroicons/solid";
 import { router } from "expo-router";
+import { connectWithContract } from "../hooks/useContract";
+import { VerbalAddress, VerbalABI } from "../constants/contract";
 
 const Details = ({ isNotProfile }) => {
   const [wallet, setWallet] = useState("");
@@ -16,12 +18,22 @@ const Details = ({ isNotProfile }) => {
     const fetchWallet = async () => {
       const address = await getAccount();
       setWallet(address);
-      // token contract address
-      const erc20TokenAddress = "0xb00ca2cc9d7d6D4B72C55C356f8B911a9d8a8350";
       //get balance
-      const balance = await RlyMumbaiNetwork.getBalance(erc20TokenAddress);
-      console.log(balance);
     };
+    // const fetchUserVerbalTokenBalance = async () => {
+    //   try {
+    //     const contract = await connectWithContract(VerbalAddress, VerbalABI);
+    //     const userTokenBalance = await contract?.balanceOf(wallet);
+    //     console.log("USER BALANCE IS ___", Number(userTokenBalance));
+    //     setBalance(Number(userTokenBalance).toString())
+    //     return userTokenBalance;
+    //   } catch (error) {
+    //     console.log(error.message);
+    //     console.error("Error fetching user balance:", error.message);
+    //     throw error; // Rethrow the error to handle it higher up in your application
+    //   }
+    // };
+    // fetchUserVerbalTokenBalance();
     fetchWallet();
   }, [wallet]);
 
@@ -45,7 +57,7 @@ const Details = ({ isNotProfile }) => {
             </Text>
             <DocumentDuplicateIcon size={14} color="#000" />
           </View>
-          <Text className="text-[34px]">20:00 VT</Text>
+          <Text className="text-[34px]">0 VT</Text>
           <View className="flex-row space-x-6 items-center">
             <TouchableOpacity
               onPress={mint}

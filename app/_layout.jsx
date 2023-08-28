@@ -12,12 +12,11 @@ import { AccountProvider } from "../context/account";
 import { WalletConnectModal } from "@walletconnect/modal-react-native";
 import { WagmiConfig, configureChains, createConfig, mainnet } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
-import { avalanche, bsc, lineaTestnet, linea, goerli } from "wagmi/chains";
+import { avalanche, bsc, lineaTestnet, linea, goerli, avalancheFuji, arbitrumGoerli } from "wagmi/chains";
 import { PortalProvider } from "@gorhom/portal";
-import { CustomText } from "../components/StyledText";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, avalanche, bsc, lineaTestnet, linea, goerli],
+  [mainnet, avalanche, bsc, lineaTestnet, linea, goerli, avalancheFuji, arbitrumGoerli],
   [publicProvider()]
 );
 

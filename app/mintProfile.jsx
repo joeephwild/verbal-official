@@ -15,7 +15,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { getAccount } from "@rly-network/mobile-sdk";
-import { connectWithContract } from "../hooks/useContract";
+import { connectWithContract, connectWithEnsContract } from "../hooks/useContract";
 import { ethers } from "ethers";
 // import { ethers } from "ethers";
 // import { getWallet } from "@rly-network/mobile-sdk";
@@ -69,7 +69,7 @@ const mintProfile = () => {
     try {
       setIsLoading(true); // Start loading
       setModalVisible(true);
-      const contract = await connectWithContract(
+      const contract = await connectWithEnsContract(
         "0x283Af0B28c62C092C9727F1Ee09c02CA627EB7F5",
         ABI
       );
