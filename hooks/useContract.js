@@ -23,17 +23,6 @@ const weiValue = (number) => ethers.utils.parseUnits(String(number), "wei");
 
 const gasLimit = 1000000;
 
-// // export const durationToRegister = 31556952; // 1 year
-// export const resolver = "0xd7a4F6473f32aC2Af804B3686AE8F1932bC35750";
-// export const ABI = [
-//   "function rentPrice(string memory name, uint duration) view public returns(uint)",
-//   "function available(string memory name) public view returns(bool)",
-//   "function makeCommitmentWithConfig(string memory name, address owner, bytes32 secret, address resolver, address addr) pure public returns(bytes32)",
-//   "function commit(bytes32 commitment) public",
-//   "function registerWithConfig(string memory name, address owner, uint duration, bytes32 secret, address resolver, address addr) public payable",
-//   "function minCommitmentAge() public view returns(uint)",
-// ];
-
 export const connectWithEnsContract = async (contractAddress, contractAbi) => {
   const mnemonic = await getAccountPhrase();
   const privateKey =
@@ -53,10 +42,7 @@ export const connectWithContract = async (contractAddress, contractAbi) => {
   const privateKey =
     ethers.Wallet.fromMnemonic(mnemonic)._signingKey().privateKey;
   const provider = new ethers.providers.JsonRpcProvider(
-    // "https://rpc.ankr.com/eth_goerli",
-    // "goerli"
     "https://avalanche-fuji.infura.io/v3/4c063e7cdc7c4d6788000384a7851888"
-    // "avalanche"
   );
 
   const wallet = new ethers.Wallet(privateKey, provider);

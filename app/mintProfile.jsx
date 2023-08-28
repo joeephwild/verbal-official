@@ -1,12 +1,4 @@
-import {
-  View,
-  Text,
-  Pressable,
-  TextInput,
-  Alert,
-  Modal,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, Pressable, TextInput, Alert, Modal } from "react-native";
 import { ens_normalize } from "@adraffy/ens-normalize";
 import React, { useEffect, useState } from "react";
 import { ChevronLeftIcon } from "react-native-heroicons/solid";
@@ -15,12 +7,18 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { getAccount } from "@rly-network/mobile-sdk";
-import { connectWithContract, connectWithEnsContract } from "../hooks/useContract";
+import { connectWithEnsContract } from "../hooks/useContract";
 import { ethers } from "ethers";
-// import { ethers } from "ethers";
-// import { getWallet } from "@rly-network/mobile-sdk";
-// import EnsRegsitar from "../constants/EnsRegsitar.json";
 import * as Crypto from "expo-crypto";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  updateDoc,
+} from "firebase/firestore";
+import { db } from "../firebase";
+import { useEnsName } from "wagmi";
 
 const mintProfile = () => {
   const [name, setName] = useState("");
@@ -64,6 +62,55 @@ const mintProfile = () => {
       return text.substring(0, maxLength - 3) + "...";
     }
   }
+
+  const [accountDetails, setAccountDetails] = useState("");
+  const [wallet, setWallet] = useState("");
+  // console.log("user profile", accountDetails);
+
+  useEffect(() => {
+    const filterForTutor = async () => {
+      try {
+        const address = await getAccount();
+        setWallet(address);
+        const q = query(collection(db, "users"));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          let profiles = [];
+          querySnapshot.forEach((doc) => {
+            profiles.push({ ...doc.data(), id: doc.id });
+          });
+          const tutorAccount = profiles?.filter(
+            (item) => item.address === wallet
+          );
+          // Extract the usernames from the filtered profiles
+          const usernames = tutorAccount.map((item) => item.id);
+          console.log("Usernames:", usernames);
+          setAccountDetails(usernames);
+        });
+        return () => unsubscribe();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    filterForTutor();
+  }, [wallet]);
+
+  const { data: username } = useEnsName({
+    address: wallet,
+    chainId: 5,
+  });
+
+  const handUpdate = async () => {
+    try {
+      const data = await accountDetails[0];
+      const washingtonRef = doc(db, "users", data);
+      await updateDoc(washingtonRef, {
+        userName: username,
+      });
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
+  };
 
   const register = async (name, owner, durationToRegister) => {
     try {
@@ -221,6 +268,17 @@ const mintProfile = () => {
         >
           <Text className="text-[16px] text-white  font-bold leading-normal">
             Mint Name
+          </Text>
+        </Pressable>
+        <Pressable
+          style={{
+            width: wp(90),
+          }}
+          onPress={handUpdate}
+          className="bg-[#F70] mb-[24px] w-full py-[16px] rounded-[8px] items-center justify-center"
+        >
+          <Text className="text-[16px] text-white  font-bold leading-normal">
+            Set As Username
           </Text>
         </Pressable>
       </View>

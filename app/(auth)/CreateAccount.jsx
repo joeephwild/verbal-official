@@ -101,6 +101,8 @@ const CreateAccount = () => {
             await RlyMumbaiNetwork.claimRly();
           }
 
+          const user = auth.currentUser;
+
           // Create the user profile
           try {
             const docRef = await addDoc(collection(db, "users"), {
@@ -128,7 +130,7 @@ const CreateAccount = () => {
               .catch((error) => {
                 // An error occurred
                 // ...
-                console.log("error updating profile", error.message)  ;
+                console.log("error updating profile", error.message);
               });
             console.log("Document written with ID: ", docRef.id);
             Alert.alert("Profile Created successfully");

@@ -108,7 +108,7 @@ const Home = () => {
                       Hi
                       <Text className="text-[#000]">
                         {" "}
-                        {name ? name : item.userName}
+                        {item.userName}
                       </Text>
                     </Text>
                     <Text className="text-[#fff]">
