@@ -235,7 +235,7 @@ const uploadPodcast = () => {
             Get Started
           </Text>
         </Pressable>
-        {!hashurl && (
+        {hashurl && (
           <>
             <Pressable
               onPress={_handlePressButtonAsync}
