@@ -42,7 +42,8 @@ export const connectWithContract = async (contractAddress, contractAbi) => {
   const privateKey =
     ethers.Wallet.fromMnemonic(mnemonic)._signingKey().privateKey;
   const provider = new ethers.providers.JsonRpcProvider(
-    "https://avalanche-fuji.infura.io/v3/4c063e7cdc7c4d6788000384a7851888"
+    // "https://avalanche-fuji.infura.io/v3/4c063e7cdc7c4d6788000384a7851888"
+    "https://arbitrum-goerli.infura.io/v3/4c063e7cdc7c4d6788000384a7851888"
   );
 
   const wallet = new ethers.Wallet(privateKey, provider);
@@ -81,10 +82,20 @@ export const scheduleASession = async (
   //note that this functionn schedules a session, timestamp:int, mentorPrice: int, meetingLink: string(IPFS HASH), address of the mentor
   try {
     const contract = await connectWithContract(SessionsAddress, SessionsABI);
-    await contract?.scheduleASession(mentorAddress, timestamp, meetingLink, {
-      value: weiValue(mentorPrice),
-      gasLimit: gasLimit,
-    });
+    const session = await contract?.scheduleASession(
+      mentorAddress,
+      timestamp,
+      meetingLink,
+      {
+        value: weiValue(mentorPrice),
+        gasLimit: gasLimit,
+      }
+    );
+    let hashUrl = `https://testnet.arbiscan.io/tx/${session.hash}`;
+    console.log(
+      `Commitment pending: https://testnet.arbiscan.io/tx/${session.hash}`
+    );
+    return hashUrl;
   } catch (error) {
     console.log(error.message);
   }
@@ -140,10 +151,18 @@ export const uploadAPodcast = async (ipfsHash, podcastPrice) => {
   //note that this fucntion uploads a podcast takes the IPFS HASH (string)and the podcast price, takes msg.sender as caller
   try {
     const contract = await connectWithContract(PodcastAddress, PodcastABI);
-    await contract?.uploadPodcast(ipfsHash, weiValue(podcastPrice), {
-      gasLimit: gasLimit,
-    });
-    return true; //returns true for successful upload
+    const podcast = await contract?.uploadPodcast(
+      ipfsHash,
+      weiValue(podcastPrice),
+      {
+        gasLimit: gasLimit,
+      }
+    );
+    let hashUrl = `https://testnet.arbiscan.io/address/${podcast.hash}`;
+    console.log(
+      `Commitment pending: https://testnet.arbiscan.io/address/${podcast.hash}`
+    );
+    return hashUrl; //returns true for successful upload
   } catch (error) {
     console.log(error.message);
   }
@@ -154,7 +173,8 @@ export const getUserPodcastsId = async (address) => {
   try {
     const contract = await connectWithContract(PodcastAddress, PodcastABI);
     const podcastIds = await contract?.getUserPodcasts(address);
-    return podcastIds;
+
+    return podcastIds.hash;
   } catch (error) {
     console.log(error.message);
   }
