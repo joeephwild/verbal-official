@@ -36,7 +36,7 @@ const uploadPodcast = () => {
   const [wallet, setWallet] = useState("");
   const [audioFileUrl, setAudioFileUrl] = useState("");
   const [result, setResult] = useState(null);
-  console.log(wallet)
+  console.log(wallet);
 
   const _handlePressButtonAsync = async () => {
     let result = await WebBrowser.openBrowserAsync(hashurl);
@@ -126,7 +126,7 @@ const uploadPodcast = () => {
         const result = await uploadAPodcast(hash, price);
         setHashUrl(result);
         if (result) {
-          console.log("Successful contract call");
+          Alert.alert("Successful contract call");
           const docRef = await addDoc(collection(db, "podcast"), {
             podcast_img: image,
             podcast_Title: podcastTitle,
@@ -138,12 +138,13 @@ const uploadPodcast = () => {
           });
           // Handle success
         } else {
-          console.error("Failed contract call");
+          Alert.alert("Failed contract call");
           // Handle failure
         }
       }
     } catch (error) {
       console.error("Error uploading podcast:", error.message);
+      getLocaleDirection.alert("error", error.message);
       // Handle error
     }
   };
@@ -241,7 +242,9 @@ const uploadPodcast = () => {
               onPress={_handlePressButtonAsync}
               className="bg-[#fff] w-full py-[16px] mt-[15px] rounded-[8px] items-center justify-center"
             >
-              <Text className>{hashurl}</Text>
+              <Text className="text-[10px] font-normal text-[#0000ff]">
+                {hashurl}
+              </Text>
             </Pressable>
           </>
         )}

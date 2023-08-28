@@ -158,9 +158,9 @@ export const uploadAPodcast = async (ipfsHash, podcastPrice) => {
         gasLimit: gasLimit,
       }
     );
-    let hashUrl = `https://testnet.arbiscan.io/address/${podcast.hash}`;
+    let hashUrl = `https://testnet.arbiscan.io/tx/${podcast.hash}`;
     console.log(
-      `Commitment pending: https://testnet.arbiscan.io/address/${podcast.hash}`
+      `Commitment pending: https://testnet.arbiscan.io/tx/${podcast.hash}`
     );
     return hashUrl; //returns true for successful upload
   } catch (error) {

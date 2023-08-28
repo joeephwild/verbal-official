@@ -7,11 +7,16 @@ import { Input } from "react-native-elements";
 import { TextInput } from "react-native";
 import { createMeeting } from "../../utils/create-room";
 import { scheduleASession } from "../../hooks/useContract";
+import { Alert } from "react-native";
+import * as WebBrowser from "expo-web-browser";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "../../firebase";
 
 const ConfirmTime = ({ selectedDate, time, handleClick }) => {
   const [mentor, setMentor] = useState("");
   const [question, setQuestion] = useState();
   const [price, setPrice] = useState();
+  const [hashurl, setHashUrl] = useState("");
   console.log(selectedDate);
 
   const handleTime = (timeString) => {
@@ -32,11 +37,40 @@ const ConfirmTime = ({ selectedDate, time, handleClick }) => {
   };
 
   const handleScheduleSession = async () => {
+    if (!mentor || !time || !price) return Alert.alert("");
     const meeting = await createMeeting();
-    console.log(meeting);
+
     if (meeting) {
-      scheduleASession(mentor, handleTime(time), meeting, price);
+      try {
+        const hash = await scheduleASession(
+          mentor,
+          handleTime(time),
+          meeting,
+          price
+        );
+        setHashUrl(hash);
+        if (hash) {
+          Alert.alert("Successful contract call");
+          const docRef = await addDoc(collection(db, "session"), {
+            tutor_address: mentor,
+            amount: price,
+            period: time,
+            created_at: serverTimestamp(),
+          });
+          // Handle success
+        } else {
+          Alert.alert("Failed contract call");
+          // Handle failure
+        }
+      } catch (error) {
+        Alert.alert("error", error.message);
+      }
     }
+  };
+
+  const _handlePressButtonAsync = async () => {
+    let result = await WebBrowser.openBrowserAsync(hashurl);
+    setResult(result);
   };
   return (
     <View className="mx-[24px] mt-[16px]">
@@ -109,6 +143,18 @@ const ConfirmTime = ({ selectedDate, time, handleClick }) => {
           Continue
         </Text>
       </Pressable>
+      {hashurl && (
+        <>
+          <Pressable
+            onPress={_handlePressButtonAsync}
+            className="bg-[#fff] w-full py-[16px] mt-[15px] rounded-[8px] items-center justify-center"
+          >
+            <Text className="text-[10px] font-normal text-[#0000ff]">
+              {hashurl}
+            </Text>
+          </Pressable>
+        </>
+      )}
     </View>
   );
 };
