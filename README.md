@@ -2,7 +2,7 @@
 
 Welcome to Verbal, an innovative Decentralized Application (DApp) that is set to redefine the way we learn languages. As you embark on your linguistic journey, Verbal promises not just a language learning experience, but a vibrant, community-driven adventure that fosters connections, knowledge exchange, and growth.
 
-![Verbal Dapp](/images/verbal-dapp-screenshot.png)
+![`Verbal Dapp Demo Video`](https://youtu.be/3GpQJRiDUjI?si=X2GCv54E7tmqsroQ)
 
 ## Table of Contents
 
@@ -11,7 +11,7 @@ Welcome to Verbal, an innovative Decentralized Application (DApp) that is set to
 - [Usage](#usage)
 - [Technologies Used](#technologies-used)
 - [Contributing](#contributing)
-- [License](#license)
+- [License](#license) -[How to run code](#Run-Code)
 
 ## About
 
@@ -78,7 +78,7 @@ This project is licensed under the [MIT License](LICENSE).
 ## Contract Links
 
 - ['VerbalToken'](https://goerli.lineascan.build/address/0x13Dc55d50a67C882Cf9930281C91688489642789#code)
--  ['PodcastContract'](https://goerli.lineascan.build/address/0x2413916b5b6d5d13770fba2F05e0BA04411a6691#code)
+- ['PodcastContract'](https://goerli.lineascan.build/address/0x2413916b5b6d5d13770fba2F05e0BA04411a6691#code)
 - [' Sessions](https://goerli.lineascan.build/address/0xfFDd21F23227c8776fF691635482EF3aFF6D750f#code)
 - ['RewardsContract](https://goerli.lineascan.build/address/0xb00ca2cc9d7d6D4B72C55C356f8B911a9d8a8350#code)
 
@@ -86,17 +86,38 @@ This project is licensed under the [MIT License](LICENSE).
 
 Ready to embark on a journey of language learning and exploration? Join us in revolutionizing the way we learn and practice languages with Verbal Dapp!
 
-# Expo Router Example
+# Prerequiste
 
-Use [`expo-router`](https://expo.github.io/router) to build native navigation using files in the `app/` directory.
+- Node-js
+- Expo Go: Install expo go on the apple or google playstore
+- Visual studio code
+- Get some Avax token
 
-## 🚀 How to use
+- Step one
+- Clone the repository
 
-```sh
-npx create-expo-app -e with-router
+```
+git clone https://github.com/joeephwild/verbal-official.git
 ```
 
-## 📝 Notes
+- Install dependencies
 
-- [Expo Router: Docs](https://expo.github.io/router)
-- [Expo Router: Repo](https://github.com/expo/router)
+```
+Yarn
+```
+
+- Run Project
+
+```
+Npx expo start
+
+or
+
+Yarn start
+```
+
+- Switch to the expo build by click S On the keyboard in the terminal
+
+- Scan the given Qrcode with your iphone or android mobile phone camera
+
+- you will be visited with a page in your browser click on the expo go button, make sure you have expo go installed for it to run

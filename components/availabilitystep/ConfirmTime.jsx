@@ -124,7 +124,7 @@ const ConfirmTime = ({ selectedDate, time, handleClick }) => {
         </View>
         <View className="items-start space-y-4">
           <Text className="text-[16px] font-normal leading-[22px] text-[#fff]">
-            Add your question to this booking
+            Add Language to Learn
           </Text>
           <TextInput
             value={question}

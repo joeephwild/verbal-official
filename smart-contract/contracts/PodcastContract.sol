@@ -3,6 +3,9 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
+import {AxelarExecutable} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/executable/AxelarExecutable.sol";
+import {IAxelarGateway} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGateway.sol";
+import {IAxelarGasService} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol";
 
 contract PodcastContract {
     using Counters for Counters.Counter;
