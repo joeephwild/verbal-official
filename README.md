@@ -2,7 +2,9 @@
 
 Welcome to Verbal, an innovative Decentralized Application (DApp) that is set to redefine the way we learn languages. As you embark on your linguistic journey, Verbal promises not just a language learning experience, but a vibrant, community-driven adventure that fosters connections, knowledge exchange, and growth.
 
-![`Verbal Dapp Demo Video`](https://youtu.be/3GpQJRiDUjI?si=X2GCv54E7tmqsroQ)
+[![Video Demo](https://azure-conscious-jellyfish-842.mypinata.cloud/ipfs/QmbCp5TXvU4qrZVTfqEdaYoNzebX2zXTWKvx9LrB1Beg93?pinataGatewayToken=QIyk0eCyyNIke3pNtPjLDd2jG_3G5YLq1q-rCz0hSBWgS1_uCbVwtk0iNMcBkOTw)
+
+[Watch the Video Demo](https://www.youtube.com/watch?v=YOUR_VIDEO_ID_HERE](https://youtu.be/3GpQJRiDUjI?si=QuaVuK-EjUjVl85z))
 
 ## Table of Contents
 
@@ -11,7 +13,8 @@ Welcome to Verbal, an innovative Decentralized Application (DApp) that is set to
 - [Usage](#usage)
 - [Technologies Used](#technologies-used)
 - [Contributing](#contributing)
-- [License](#license) -[How to run code](#Run-Code)
+- [License](#license)
+- -[How to run code](#Howto)
 
 ## About
 
@@ -85,6 +88,8 @@ This project is licensed under the [MIT License](LICENSE).
 ---
 
 Ready to embark on a journey of language learning and exploration? Join us in revolutionizing the way we learn and practice languages with Verbal Dapp!
+
+## How to
 
 # Prerequiste
 
