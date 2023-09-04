@@ -4,7 +4,7 @@ Welcome to Verbal, an innovative Decentralized Application (DApp) that is set to
 
 [![Video Demo](https://azure-conscious-jellyfish-842.mypinata.cloud/ipfs/QmbCp5TXvU4qrZVTfqEdaYoNzebX2zXTWKvx9LrB1Beg93?pinataGatewayToken=QIyk0eCyyNIke3pNtPjLDd2jG_3G5YLq1q-rCz0hSBWgS1_uCbVwtk0iNMcBkOTw)
 
-[Watch the Video Demo](https://www.youtube.com/watch?v=YOUR_VIDEO_ID_HERE](https://youtu.be/3GpQJRiDUjI?si=QuaVuK-EjUjVl85z))
+[Watch the Video Demo](https://youtu.be/3GpQJRiDUjI?si=QuaVuK-EjUjVl85z))
 
 ## Table of Contents
 
